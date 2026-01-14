@@ -62,8 +62,14 @@ final class UserFactory extends ModelFactory
     protected function initialize(): self
     {
         return $this
-            // ->afterInstantiate(function(User $user): void {})
-        ;
+            ->afterInstantiate(function(User $user): void {
+                // Always hash the password if it's not already hashed
+                if ($user->getPassword() && !str_starts_with($user->getPassword(), '$2y$')) { // bcrypt hash check
+                    $user->setPassword(
+                        $this->hasher->hashPassword($user, $user->getPassword())
+                    );
+                }
+            });
     }
 
     protected static function getClass(): string

@@ -16,10 +16,14 @@ class SecurityAccessTest extends WebTestCase
     public function testAdminRouteAccessibleForAdminUser()
     {
         $client = static::createClient();
-        $client->request('GET', '/admin', [], [], [
-            'PHP_AUTH_USER' => 'admin',
-            'PHP_AUTH_PW'   => 'admin',
-        ]);
+        // Simule la soumission du formulaire de login
+        $crawler = $client->request('GET', '/login');
+        $form = $crawler->selectButton('Sign in')->form();
+        $form['_username'] = 'admin@example.com';
+        $form['_password'] = 'admin';
+        $client->submit($form);
+        $client->followRedirect();
+        $client->request('GET', '/admin');
         $this->assertResponseStatusCodeSame(200);
     }
 }

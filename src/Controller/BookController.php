@@ -11,11 +11,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/book')]
 class BookController extends AbstractController
 {
-    #[Route('', name: 'app_book_index', methods: ['GET'])]
-    public function index(Request $request, BookRepository $repository): Response
+    #[Route('/books', name: 'app_books_index', methods: ['GET'])]
+    public function books(Request $request, BookRepository $repository): Response
     {
         $books = Pagerfanta::createForCurrentPageWithMaxPerPage(
             new QueryAdapter($repository->createQueryBuilder('b')),
@@ -28,7 +27,7 @@ class BookController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_book_show', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[Route('/books/{id}', name: 'app_books_show', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function show(?Book $book): Response
     {
         return $this->render('book/show.html.twig', [

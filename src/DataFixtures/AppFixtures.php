@@ -17,5 +17,13 @@ class AppFixtures extends Fixture
         AuthorFactory::createMany(50);
         UserFactory::createMany(5);
         BookFactory::createMany(100);
+
+        UserFactory::createOne([
+            'email' => 'admin@example.com',
+            'firstname' => 'Admin',
+            'lastname' => 'Admin',
+            'roles' => ['ROLE_ADMIN'],
+            'password' => 'admin',
+        ]);
     }
 }
